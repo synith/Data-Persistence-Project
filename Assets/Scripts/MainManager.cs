@@ -11,10 +11,11 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text highScoreText;
     public GameObject GameOverText;
     
     private bool m_Started = false;
-    private int m_Points;
+    private int m_Points = 0;
     
     private bool m_GameOver = false;
 
@@ -22,7 +23,12 @@ public class MainManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        ScoreText.text = $"Score : {m_Points} - {ScoreManager.Instance.PlayerName}";
+        if (ScoreManager.Instance != null)
+        {
+            ScoreText.text = SetScore();
+            highScoreText.text = SetHighScore();
+        }
+        
 
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
@@ -61,18 +67,68 @@ public class MainManager : MonoBehaviour
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
+            else if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                SceneManager.LoadScene(0);
+            }
         }
     }
 
     void AddPoint(int point)
     {
         m_Points += point;
-        ScoreText.text = $"Score : {m_Points} - {ScoreManager.Instance.PlayerName}";
+        ScoreText.text = SetScore();
+        CheckHighScore();
     }
 
     public void GameOver()
     {
         m_GameOver = true;
-        GameOverText.SetActive(true);
+        GameOverText.SetActive(true);        
+    }
+
+    private void CheckHighScore()
+    {
+        if (ScoreManager.Instance != null)
+        {
+            if (m_Points > ScoreManager.Instance.HighScore)
+            {
+                ScoreManager.Instance.HighScore = m_Points;
+                ScoreManager.Instance.HighScorePlayer = ScoreManager.Instance.PlayerName;
+                highScoreText.text = SetHighScore();
+                ScoreManager.Instance.SaveHighScore();
+            }
+        }        
+    }
+
+    private string SetHighScore()
+    {
+        string highScore;
+        if (ScoreManager.Instance != null)
+        {
+            highScore = $"Best Score : {ScoreManager.Instance.HighScore} - {ScoreManager.Instance.HighScorePlayer}";
+            return highScore;
+        }
+        else
+        {
+            highScore = $"Score : ? - Not Found";
+            return highScore;
+        }            
+    }
+
+    private string SetScore()
+    {
+        string score;
+        if (ScoreManager.Instance != null)
+        {
+            score = $"Score : {m_Points} - {ScoreManager.Instance.PlayerName}";
+            return score;
+        }
+        else
+        {
+            score = $"Score: ? - Not Found";
+            return score;
+        }
+        
     }
 }

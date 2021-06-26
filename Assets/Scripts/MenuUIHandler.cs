@@ -13,7 +13,12 @@ using UnityEditor;
 public class MenuUIHandler : MonoBehaviour
 {
     [SerializeField]private TextMeshProUGUI inputName;
-    
+    [SerializeField]private TextMeshProUGUI highScoreText;
+
+    private void Awake()
+    {
+        highScoreText.text = $"Best Score: {ScoreManager.Instance.HighScore} - {ScoreManager.Instance.HighScorePlayer}";
+    }
 
     public void StartNew()
     {
@@ -23,6 +28,8 @@ public class MenuUIHandler : MonoBehaviour
     
     public void Exit()
     {
+        ScoreManager.Instance.SaveHighScore();
+
 #if UNITY_EDITOR
         EditorApplication.ExitPlaymode();
 #else

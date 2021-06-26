@@ -951,6 +951,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerName: 
+  HighScorePlayer: Nobody
+  HighScore: 0
 --- !u!4 &803386747
 Transform:
   m_ObjectHideFlags: 0
@@ -1476,6 +1478,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputName: {fileID: 511172112}
+  highScoreText: {fileID: 492178380}
 --- !u!1 &1695151118
 GameObject:
   m_ObjectHideFlags: 0
